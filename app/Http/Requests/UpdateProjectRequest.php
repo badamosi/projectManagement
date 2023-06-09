@@ -28,7 +28,7 @@ class UpdateProjectRequest extends FormRequest
             'description' => 'string',
             'start_date' => 'date',
             'end_date' => 'date|after_or_equal:start_date',
-            'progress_level' => 'integer|between:0,100',
+            // 'progress_level' => 'integer|between:0,100',
             'status' => 'string',
         ];
     }

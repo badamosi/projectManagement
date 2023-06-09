@@ -11,7 +11,6 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        
         try {
             $projects = Project::with('developers')->get();
             return response()->success(['projects' => $projects]);
@@ -24,6 +23,9 @@ class ProjectController extends Controller
     {
         try {
             $project = Project::create($request->validated());
+
+            $project->developers()->attach($request->developer_ids);
+
             return response()->success(['project' => $project]);
         } catch (Exception $e) {
             return response()->error($e->getMessage(), 500);
@@ -44,7 +46,10 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
         try {
-            $project = $project->update($request->validated());
+            $project->developers()->sync($request->developer_ids);
+            $project->update($request->validated());
+
+
             return response()->success(['project' => $project]);
         } catch (Exception $e) {
             return response()->error($e->getMessage(), 500);
@@ -62,21 +67,4 @@ class ProjectController extends Controller
         }
     }
 
-
-    public function assignProject(Request $request)
-    {
-        
-        try {
-            $developerIds = $request->input('developer_ids', []);
-            $project = Project::findOrFail($id);
-    
-            // Validate the project data and developer IDs
-    
-            // Assign the project to developers
-            $project->developers()->attach($developerIds);
-            return response()->success(['message' => 'Project assigned successfully']);
-        } catch (Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

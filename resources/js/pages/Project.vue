@@ -1,56 +1,81 @@
 <template>
     <Layout>
-        <div>
-        <div class="content-header">
-            <div>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                        <li class="breadcrumb-item"><a href="#">User Pages</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">People Directory</li>
-                    </ol>
-                </nav>
-                <h4 class="content-title content-title-sm">People Directory</h4>
-            </div>
-        </div>
         <div class="content-body">
-            <!-- <div class="d-flex align-items-center justify-content-between mg-b-15">
-                <h6 class="tx-uppercase tx-bold tx-spacing-1 tx-13 mg-b-0">Most Recent Updates</h6>
-                <div class="btn-group">
-                    <button class="btn btn-white btn-xs btn-icon" disabled=""><i class="icon ion-chevron-left"></i></button>
-                    <button class="btn btn-white btn-xs btn-icon"><i class="icon ion-chevron-right"></i></button>
+
+            <div class="row row-sm mg-t-15 mg-sm-t-20 w-100 p-0">
+
+                <button @click="addProject" type="button" class="btn btn-xs btn-primary">Add Project</button>
+
+                <div class="table-responsive">
+                    <table class="table mg-b-0">
+                        <thead class="thead-dark1">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">End Date</th>
+                                <th scope="col">No. of Developers</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Project @update="handleUpdate" v-for="(project, i) in projects" :key="i" :data="project" />
+                        </tbody>
+                    </table>
                 </div>
-            </div> -->
 
-            <div class="people-list people-list-one">
-                <div class="people-list-body">
-                    <div class="row row-xs">
-                        <!-- Developers -->
-
-                        <Project v-for="dev in 3" />
-
-                    </div><!-- row -->
-                </div><!-- people-list-body -->
-            </div><!-- people-list -->
-
-            <hr class="mg-lg-y-25 op-0">
-
+            </div><!-- row -->
         </div>
-    </div>
+        <ProjectModalForm :data="selectedProject" :editingForm="editingForm" />
     </Layout>
+    <!-- ProjectForm -->
 </template>
 
 <script>
 
 import Layout from '../components/Layout.vue'
 import Project from '../components/Project.vue'
+import ProjectModalForm from '../components/modals/Project.vue'
+import { Api } from '../utils/axios'
 
 
 
 export default {
     mounted() {
-        console.log('Component mounted.')
+        this.fetchProjects()
     },
-    components: { Layout, Project },
+    components: { Layout, Project, ProjectModalForm },
+    data() {
+        return {
+            editingForm: false,
+            selectedProject: {}
+        }
+    },
+    computed: {
+        projects() {
+            return this.$store?.state.projects
+        }
+    },
+    methods: {
+        fetchProjects() {
+            Api.get('/projects')
+                .then((res) => {
+                    const { projects } = res.data.data
+                    this.$store.commit('refreshProjects', projects)
+                }).catch(err => console.log(err))
+        },
+
+        handleUpdate(payload) {
+            this.selectedProject = payload
+            this.editingForm = true
+        },
+
+        addProject() {
+            this.editingForm = false
+            this.selectedProject = {}
+            $("#ProjectForm").modal('show');
+        },
+
+    }
 }
 </script>

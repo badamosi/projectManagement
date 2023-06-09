@@ -115,7 +115,7 @@
           </div>
         </div><!-- header-right -->
       </div><!-- header -->
-      <div class="content-body content-body-components">
+      <div class="content-body content-body-components1">
         
 
         <slot></slot>

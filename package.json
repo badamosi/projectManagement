@@ -22,9 +22,11 @@
         "vue": "^3.2.33",
         "vue-loader": "^17.0.0",
         "vue-router": "^4.0.13",
-        "vue-template-compiler": "^2.6.12"
+        "vue-template-compiler": "^2.6.12",
+        "vuex": "^4.0.2"
     },
     "dependencies": {
+        "@vueform/multiselect": "^2.6.2",
         "jquery": "^3.4.1"
     }
 }

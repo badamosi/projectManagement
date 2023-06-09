@@ -19,7 +19,6 @@ class CreateProjectsTable extends Migration
             $table->mediumText('description');
             $table->date('start_date');
             $table->date('end_date');
-            $table->integer('progress_level');
             $table->enum('status', ['overdue', 'ongoing', 'completed'])
                     ->default('ongoing');
             $table->timestamps();
