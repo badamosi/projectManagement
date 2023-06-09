@@ -42,7 +42,6 @@
 
                     <label class="form-control-label">Status</label>
                     <select v-model="formData.status" class="custom-select mg-b-10">
-                        <option selected="">Open this select menu</option>
                         <option v-for="(stat, i) in projectStatus" value="1">{{stat}}</option>
                     </select>
 
