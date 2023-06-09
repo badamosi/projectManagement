@@ -1,44 +1,32 @@
 <template>
     <Layout>
-        <div>
-            <div class="content-header">
-                <div>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                            <li class="breadcrumb-item"><a href="#">User Pages</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">People Directory</li>
-                        </ol>
-                    </nav>
-                    <h4 class="content-title content-title-sm">People Directory</h4>
+        <div class="content-body">
+
+            <div class="row row-sm mg-t-15 mg-sm-t-20 w-100 p-0">
+
+                <button @click="addDev" type="button" class="btn btn-xs btn-primary">Add Developer</button>
+
+                <div class="table-responsive">
+                    <table class="table mg-b-0">
+                        <thead class="thead-dark1">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Developer @update="handleUpdate" v-for="(dev, i) in developers" :key="i" :data="dev" />
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="content-body">
-                <!-- <div class="d-flex align-items-center justify-content-between mg-b-15">
-                <h6 class="tx-uppercase tx-bold tx-spacing-1 tx-13 mg-b-0">Most Recent Updates</h6>
-                <div class="btn-group">
-                    <button class="btn btn-white btn-xs btn-icon" disabled=""><i class="icon ion-chevron-left"></i></button>
-                    <button class="btn btn-white btn-xs btn-icon"><i class="icon ion-chevron-right"></i></button>
-                </div>
-            </div> -->
 
-                <div class="people-list people-list-one">
-                    <div class="people-list-body">
-                        <div class="row row-xs">
-                            <!-- Developers -->
-
-                            <Developer v-for="dev in 3" />
-
-                        </div><!-- row -->
-                    </div><!-- people-list-body -->
-                </div><!-- people-list -->
-
-                <hr class="mg-lg-y-25 op-0">
-
-            </div>
+            </div><!-- row -->
         </div>
-        <DeveloperModalForm />
+        <DeveloperModalForm :data="selectedDeveloper" :editingForm="editingForm" />
     </Layout>
+    <!-- DeveloperForm -->
 </template>
 
 <script>
@@ -46,17 +34,46 @@
 import Layout from '../components/Layout.vue'
 import Developer from '../components/Developer.vue'
 import DeveloperModalForm from '../components/modals/Developer.vue'
+import { Api } from '../utils/axios'
+
 
 
 export default {
     mounted() {
-        console.log('Component mounted.')
+        this.fetchDevelopers()
     },
-    components: { Layout, Developer },
-    methods: {
-        displayForm() {
-            $("#EmployeeForm").modal('show');
+    components: { Layout, Developer, DeveloperModalForm },
+    data() {
+        return {
+            editingForm: false,
+            selectedDeveloper: {}
         }
+    },
+    computed: {
+        developers() {
+            return this.$store?.state.developers
+        }
+    },
+    methods: {
+        fetchDevelopers() {
+            Api.get('/developers')
+                .then((res) => {
+                    const { developers } = res.data.data
+                    this.$store.commit('refreshDevelopers', developers)
+                }).catch(err => console.log(err))
+        },
+
+        handleUpdate(payload) {
+            this.selectedDeveloper = payload
+            this.editingForm = true
+        },
+
+        addDev() {
+            this.editingForm = false
+            this.selectedDeveloper = {}
+            $("#DeveloperForm").modal('show');
+        },
+
     }
 }
 </script>

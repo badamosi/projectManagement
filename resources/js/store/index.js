@@ -16,9 +16,10 @@ const store = createStore({
       refreshProjects(state, projects){
         state.projects = projects;
       },
-      removeProject(state, projects){
-        
-      }
+
+      refreshDevelopers(state, developers){
+        state.developers = developers;
+      },
 
 
     }

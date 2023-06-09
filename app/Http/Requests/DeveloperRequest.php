@@ -26,15 +26,13 @@ class DeveloperRequest extends FormRequest
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|string',
-            'password' => 'required|string|min:6',
         ];
 
 
         // Validation rules for update request
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules['email'] .= ',' . $this->route('developer')->id;
-        }
+        } 
 
         return $rules;
     }

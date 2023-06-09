@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\DeveloperRequest;
+use Illuminate\Support\Facades\Hash;
 
 class DeveloperController extends Controller
 {
@@ -35,7 +36,7 @@ class DeveloperController extends Controller
             $requestData = $request->validated();
 
             // Set a default password if no password is provided in the request
-            $requestData['password'] = isset($requestData['password']) ? $requestData['password'] : 'default_password';
+            $requestData['password'] = isset($requestData['password']) ? $requestData['password'] : 'secret_password';
 
             // Hash the password
             $requestData['password'] = Hash::make($requestData['password']);
@@ -62,7 +63,7 @@ class DeveloperController extends Controller
     public function destroy(User $developer)
     {
         try {
-            $project->delete();
+            $developer->delete();
             return response()->success(['message' => 'Developer deleted successfully']);
         } catch (Exception $e) {
             return response()->error($e->getMessage(), 500);

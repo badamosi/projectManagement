@@ -27,6 +27,7 @@
             </div><!-- row -->
         </div>
         <ProjectModalForm :data="selectedProject" :editingForm="editingForm" />
+        <ProjectDetails :data="selectedProject"/>
     </Layout>
     <!-- ProjectForm -->
 </template>
@@ -36,6 +37,7 @@
 import Layout from '../components/Layout.vue'
 import Project from '../components/Project.vue'
 import ProjectModalForm from '../components/modals/Project.vue'
+import ProjectDetails from '../components/modals/ProjectDetails.vue'
 import { Api } from '../utils/axios'
 
 
@@ -44,7 +46,7 @@ export default {
     mounted() {
         this.fetchProjects()
     },
-    components: { Layout, Project, ProjectModalForm },
+    components: { Layout, Project, ProjectModalForm, ProjectDetails },
     data() {
         return {
             editingForm: false,

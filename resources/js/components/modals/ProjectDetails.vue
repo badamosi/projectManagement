@@ -1,56 +1,35 @@
 <template>
     
-    <div class="modal fade" id="ProjectForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
+    <div class="modal fade" id="ProjectDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable1 modal-sm" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable1 modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel4">{{ `${!editingForm ? 'Add' : 'Edit'} Project` }}</h6>
+                    <h6 class="modal-title" id="exampleModalLabel4">Project Details</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"><i data-feather="x"></i></span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-control-label">Project Name</label>
-                    <input type="text" v-model="formData.name" class="form-control mg-b-10" placeholder="Project Name">
                     
-                    <label class="form-control-label">Description</label>
-                    <textarea class="form-control mg-b-10" v-model="formData.description" rows="2" placeholder="Description"></textarea>
+                    <h4>Project Name: {{ data.name }}</h4>
+                    <p>Description: {{ data.description }}</p>
 
-
-                    <div class="mg-b-10">
-                        <Multiselect
-                        v-model="value"
-                        :options="developers"
-                        label="name"
-                        valueProp="id"
-                        mode="multiple"
-                        placeholder="Assign Developers"
-                        :close-on-select="false"
-                        />
-                    </div>
-                    <div class="row mg-b-10">
-                        <div class="col-sm-6">
-                            <label class="form-control-label">Start Date</label>
-                            <input type="date" v-model="formData.start_date" class="form-control" placeholder="Input box">
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="form-control-label">End Date</label>
-                            <input type="date" v-model="formData.end_date" class="form-control" placeholder="Input box">
-                        </div>
-                    </div>
-
-                    <label class="form-control-label">Status</label>
-                    <select v-model="formData.status" class="custom-select mg-b-10">
-                        <option selected="">Open this select menu</option>
-                        <option v-for="(stat, i) in projectStatus" value="1">{{stat}}</option>
-                    </select>
-
-                    <button @click="!editingForm ? handleSubmit() : handleUpdate()" class="btn btn-xs btn-primary">{{ `${!editingForm ? 'Save' : 'Update'} Project` }}</button>
-
+                    <table class="table bordered">
+                        <th>SN</th>
+                        <th>Developer Name</th>
+                        <th>Email</th>
+                        <tbody>
+                            <tr v-for="(dev, i) in data?.developers">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ dev.name }}</td>
+                                <td>{{ dev.email }}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
                 </div>
-
             </div>
         </div>
     </div>
@@ -100,10 +79,10 @@ export default {
                     const { project:newProject} = res.data.data
                     let projects = this.$store?.state.projects
                     this.$store.commit('refreshProjects', [...projects, newProject])
-                    $("#ProjectForm").modal('hide');
 
                     alert("New project saved successfully")
 
+                    $("#ProjectForm").modal('hide');
                 }).catch(error => {
                     if (error.response) {
                         let [key, value] = Object.entries(error.response.data.errors)[0]
@@ -128,10 +107,10 @@ export default {
                     projects[index] = newProject
 
                     this.$store.commit('refreshProjects', projects)
-                    $("#ProjectForm").modal('hide');
 
                     alert("Update Successful")
 
+                    $("#ProjectForm").modal('hide');
                 }).catch(error => {
                     if (error.response) {
                         let [key, value] = Object.entries(error.response.data.errors)[0]
